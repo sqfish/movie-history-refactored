@@ -36,24 +36,24 @@ requirejs(
         console.log("loadMovies function called");
       });
 
-    }
-
+		}
+// Get OMDB API movie info
 		
-  // $("#addMusicButton").on("click", function(){
-  //   var musicData = {};
-  //   //grab values from form and store in object
-  //     musicData = {
-  //       "title": $("#addTitle").val(),
-  //       "year": $("#addArtist").val(),
-  //       "actors": $("#addAlbum").val(),
-  //       "rating":
-  //       "viewed":
-  //     };
-
-  //     musicData = JSON.stringify(musicData);
-  //     console.log("stringified musicData", musicData);
-  //     addMusic.addMusic(musicData);
-  //     $("#addTitle").val("");
-  //     $("#addArtist").val("");
-  //     $("#addAlbum").val("");
- });
+	function getMovie(title) {
+    		$.ajax({
+    url: "http://www.omdbapi.com/?",
+    data: {
+        s: title,
+    },
+    success: function(data) {
+        console.log(data);
+					}
+    });
+	}
+		
+		$(".subTitle").on("click", function(){
+			var title = $("#movieTitle").val();
+			console.log("title", title);
+			console.log(getMovie(title));
+    });
+});
