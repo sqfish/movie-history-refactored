@@ -1,0 +1,10 @@
+  {{#each movies}}
+  <div class='movieItem'>
+    <h2>{{title}} ({{year}})</h2> 
+    <p>{{actors}}</p>
+    <p>{{rating}}</p> 
+    <input type="checkbox" name="viewed" checked>
+    <!--  $("[name='viewed']").bootstrapSwitch();  -->
+    <input type='button' value='delete' class='delete'>
+  </div>
+  {{/each}}
