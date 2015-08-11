@@ -5,7 +5,7 @@
   <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel= "stylesheet" type="text/css" href="styles/main.css">
-  <title>Music History</title>
+  <title>Movie History</title>
   <title>Nashville Software School</title>
 </head>
 
@@ -14,7 +14,7 @@
   <header>  
   <nav>
    <ul class="nav nav-tabs">
-     <li role="presentation"><a href="#">Home</a></li>
+     <li role="presentation"><a href="index.html">Home</a></li>
      <li role="presentation" class="active"><a href="addMovie.html">Add Movies</a></li>
      <li role="presentation"><a href="#">Profile</a></li>
    </ul>
@@ -28,8 +28,10 @@
         <label for="movieName">Movie Name</label>
           <br>
           <input id="movieName" class="form-control" type="text" placeholder="Movie Name">
+					<input type="button" class="subTitle" value="Search">
           <br>
           <br>
+				<div id="searchResult"></div>
           <br>
         <label for="ratingSystem">Rating System</label>
           <br>
@@ -76,6 +78,6 @@
    </form>
 
   <footer></footer>
-  <script data-main="javascripts/main" src="bower_components/requirejs/require.js"></script>
+  <script data-main="javascripts/main" src="/bower_components/requirejs/require.js"></script>
 </body>
 </html>
