@@ -1,0 +1,21 @@
+{
+  "name": "movie-history",
+  "version": "0.0.0",
+  "homepage": "https://github.com/C-Stein/movie-history",
+  "authors": [
+    "Caitlin Stein <caitlin.teter@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "requirejs": "~2.1.20",
+    "bootstrap": "~3.3.5"
+  }
+}
