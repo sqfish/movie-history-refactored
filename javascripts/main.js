@@ -31,6 +31,8 @@ requirejs(
       require(['hbs!../templates/movie-list'], function(template) {
         $("#movie-list").append(template(data));
         $("[name='viewed']").bootstrapSwitch();
+        $(".bootstrap-switch-handle-on").text("Yes!");
+        $(".bootstrap-switch-handle-off").text("No");
         console.log("loadMovies function called");
       });
 
