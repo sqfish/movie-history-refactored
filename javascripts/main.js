@@ -43,7 +43,7 @@ requirejs(
     		$.ajax({
     url: "http://www.omdbapi.com/?",
     data: {
-        s: title,
+        t: title,
     },
     success: function(data) {
         console.log(data);
