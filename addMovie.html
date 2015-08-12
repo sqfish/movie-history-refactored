@@ -31,11 +31,22 @@
 					<input type="button" class="subTitle" value="Search">
           <br>
           <br>
-				<div id="searchResult"></div>
+				<div id="searchResult">
+          <label for="year">Year</label>
+          <input type="text" name="year" id="year"> 
+          <label for="actors">Actors</label>
+          <input type="text" name="actors" id="actors">   
+        </div>
           <br>
         <label for="ratingSystem">Rating System</label>
           <br>
-      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+				<form>
+					<input type="range" name="amountRange" min="0" max="10" value="0" oninput="this.form.amountInput.value=this.value" />
+    <input type="number" name="amountInput" min="0" max="10" value="0" oninput="this.form.amountRange.value=this.value" class="ratingRange"/>
+				</form>
+				
+<!--  Button Range System
+      <div class="btn-group btn-group-justified rateButton" role="group" aria-label="...">
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default">1</button>
               </div>
@@ -65,6 +76,7 @@
               </div>
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default">10</button>
+-->
               </div>
             </div>
           <br>
