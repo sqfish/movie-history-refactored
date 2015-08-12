@@ -3,9 +3,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel= "stylesheet" type="text/css" href="styles/main.css">
-  <title>Music History</title>
+  <title>Movie History</title>
   <title>Nashville Software School</title>
 </head>
 
@@ -14,7 +14,7 @@
   <header>  
   <nav>
    <ul class="nav nav-tabs">
-     <li role="presentation"><a href="#">Home</a></li>
+     <li role="presentation"><a href="index.html">Home</a></li>
      <li role="presentation" class="active"><a href="addMovie.html">Add Movies</a></li>
      <li role="presentation"><a href="#">Profile</a></li>
    </ul>
@@ -25,15 +25,28 @@
 
     <form id= "addMovie">
       <div class="form-group ">
-        <label for="movieName">Movie Name</label>
+        <label for="movieTitle">Movie Title</label>
           <br>
-          <input id="movieName" class="form-control" type="text" placeholder="Movie Name">
+          <input id="movieTitle" class="form-control" type="text" placeholder="Movie Name">
+					<input type="button" class="subTitle" value="Search">
           <br>
           <br>
+				<div id="searchResult">
+          <label for="year">Year</label>
+          <input type="text" name="year" id="year"> 
+          <label for="actors">Actors</label>
+          <input type="text" name="actors" id="actors">   
+        </div>
           <br>
         <label for="ratingSystem">Rating System</label>
           <br>
-      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+				<form>
+					<input type="range" name="amountRange" min="0" max="10" value="0" oninput="this.form.amountInput.value=this.value" />
+    <input type="number" name="amountInput" min="0" max="10" value="0" oninput="this.form.amountRange.value=this.value" class="ratingRange"/>
+				</form>
+				
+<!--  Button Range System
+      <div class="btn-group btn-group-justified rateButton" role="group" aria-label="...">
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default">1</button>
               </div>
@@ -63,6 +76,7 @@
               </div>
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default">10</button>
+-->
               </div>
             </div>
           <br>
@@ -70,12 +84,12 @@
 
      <div class="form-group">
         <div class="addMovieSubmit">
-          <button type="submit" class="addSongs btn btn-default">Submit</button>
+          <button type="submit" class="addMovies btn btn-default">Submit</button>
       </div>
   </div>
    </form>
 
   <footer></footer>
-  <script data-main="javascripts/main" src="bower_components/requirejs/require.js"></script>
+  <script data-main="javascripts/main" src="/bower_components/requirejs/require.js"></script>
 </body>
 </html>
