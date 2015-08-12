@@ -25,14 +25,16 @@ requirejs(
 		myFirebaseRef.on("value", function(snapshot) {
       var movies = snapshot.val();
       loadMovies(movies);
+			console.log(movies);
     });
 
-    function loadMovies(data) {
+    function loadMovies(movies) {
       require(['hbs!../templates/movie-list'], function(template) {
-        $("#movie-list").append(template(data));
+        $("#movie-list").append(template(movies));
         $("[name='viewed']").bootstrapSwitch();
         $(".bootstrap-switch-handle-on").text("Yes!");
         $(".bootstrap-switch-handle-off").text("No");
+				console.log(movies.movies);
         console.log("loadMovies function called");
       });
 
@@ -46,10 +48,36 @@ requirejs(
         t: title,
     },
     success: function(data) {
-        console.log(data);
-					}
-    });
-	}
+				console.log("Movie", data);
+			var yearRel = $("#year").val(data.Year);
+			var actors = $("#actors").val(data.Actors);
+		}
+				})
+	};
+		
+	$(".addMovies").click(function(){
+					
+		// Created var for movie
+				var newMovie = {
+					"Title": $("#movieTitle").val(),
+					"Year": $("#year").val(),
+					"Actors": $("#actors").val(),
+					"Rating": $("input.ratingRange").val(),
+					};
+			console.log("Added Rating: ", newMovie);
+		
+			// send to FireBase
+					
+			$.ajax({
+        url: "https://movie-history-cpr.firebaseio.com/movies.json",
+			method: "POST",
+			data: JSON.stringify(newMovie)
+      }).done(function(addedMovie) {
+				console.log(addedMovie);
+				})
+				});
+	
+		// Search button
 		
 		$(".subTitle").on("click", function(){
 			var title = $("#movieTitle").val();
