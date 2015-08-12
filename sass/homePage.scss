@@ -1,9 +1,37 @@
+body {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 .movie-list {
-  border: 2px solid black;
   padding: 5%;
-  margin: 15px;
+	width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.movieItem {
+	margin: auto;
 }
 
 .delete {
   float: right;
+	background-color: crimson;
+	padding: 3px 6px;
+	margin-bottom: 0;
+	font-size: 12px;
+	font-weight: 200;
+	color: white;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
 }

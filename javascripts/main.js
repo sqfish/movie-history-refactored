@@ -52,12 +52,12 @@ requirejs(
 				console.log("Movie", data);
 			var yearRel = $("#year").val(data.Year);
 			var actors = $("#actors").val(data.Actors);
+				}
+			});
 		}
-				})
-	};
 		
 	$(".addMovies").click(function(){
-					
+		
 		// Created var for movie
 				var newMovie = {
 					"Title": $("#movieTitle").val(),
@@ -75,7 +75,7 @@ requirejs(
 			data: JSON.stringify(newMovie)
       }).done(function(addedMovie) {
 				console.log(addedMovie);
-				})
+				});
 				});
 	
 		// Search button

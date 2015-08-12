@@ -20,76 +20,40 @@
    </ul>
  </nav>
   </header>
-  <br>
-  <br>
 
-    <form id= "addMovie">
-      <div class="form-group ">
-        <label for="movieTitle">Movie Title</label>
-          <br>
-          <input id="movieTitle" class="form-control" type="text" placeholder="Movie Name">
-					<input type="button" class="subTitle" value="Search">
-          <br>
-          <br>
-				<div id="searchResult">
-          <label for="year">Year</label>
-          <input type="text" name="year" id="year"> 
-          <label for="actors">Actors</label>
-          <input type="text" name="actors" id="actors">   
-        </div>
-          <br>
-        <label for="ratingSystem">Rating System</label>
-          <br>
-				<form>
-					<input type="range" name="amountRange" min="0" max="10" value="0" oninput="this.form.amountInput.value=this.value" />
-    <input type="number" name="amountInput" min="0" max="10" value="0" oninput="this.form.amountRange.value=this.value" class="ratingRange"/>
-				</form>
-				
-<!--  Button Range System
-      <div class="btn-group btn-group-justified rateButton" role="group" aria-label="...">
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">1</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">2</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">3</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">4</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">5</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">6</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">7</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">8</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">9</button>
-              </div>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default">10</button>
--->
-              </div>
-            </div>
-          <br>
-    </div>
 
-     <div class="form-group">
-        <div class="addMovieSubmit">
-          <button type="submit" class="addMovies btn btn-default">Submit</button>
-      </div>
-  </div>
-   </form>
 
-  <footer></footer>
-  <script data-main="javascripts/main" src="/bower_components/requirejs/require.js"></script>
-</body>
+<!--    Search/Add Box     -->
+				<div class="form-group searchBox">
+					<label for="movieTitle">Movie Title</label>
+	
+						<input id="movieTitle" class="form-control" type="text" placeholder="Movie Name">
+					</br>
+						<input type="button" class="subTitle btn btn-default" value="Search">
+	</br>
+	</br>
+					<div id="searchResult">
+						<label for="year">Year</label>
+						<input type="text" name="year" id="year"> 
+						</br>
+						</br>
+						<label for="actors">Actors</label>
+						<input type="text" name="actors" id="actors">   
+					</div>
+						<br>
+					<label for="ratingSystem">Rating System (1-10)</label>
+						<br>
+					<form>
+						<input type="range" name="amountRange" min="0" max="10" value="0" oninput="this.form.amountInput.value=this.value" />
+						</br>
+			<input type="number" name="amountInput" min="0" max="10" value="0" oninput="this.form.amountRange.value=this.value" class="ratingRange"/>
+					</form>
+	</br>
+				<div class="addMovieSubmit">
+						<button type="submit" class="addMovies btn btn-success">Submit</button>
+				</div>
+			</div>
+  	<footer></footer>
+  	<script data-main="javascripts/main" src="/bower_components/requirejs/require.js"></script>
+	</body>
 </html>

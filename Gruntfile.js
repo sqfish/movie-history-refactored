@@ -15,10 +15,14 @@ module.exports = function(grunt) {
       javascripts: {
         files: ['./javascripts/**/*.js'],
         tasks: ['jshint']
-      }
+      },
+			sassy: {
+        files: ['./sass/**/*.scss'],
+        tasks: ['sass']
+    }
     }
   });
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-  grunt.registerTask('default', ['jshint', 'sass']);
+  grunt.registerTask('default', ['jshint', 'sass', 'watch']);
 };
