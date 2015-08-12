@@ -2,6 +2,7 @@ requirejs.config({
   baseUrl: './javascripts',
   paths: {
     'jquery': '../bower_components/jquery/dist/jquery.min',
+    'lodash': '/bower_components/lodash/lodash.min',
 		'firebase': '../bower_components/firebase/firebase',
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
     'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
@@ -17,13 +18,14 @@ requirejs.config({
 });
 
 requirejs(
-["jquery", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch"],
-	function ($, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch) {
+["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton"],
+	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton) {
 		
 		var myFirebaseRef = new Firebase("https://movie-history-cpr.firebaseio.com/");
-		
+		var movies;
+    var moviesArray = [];
 		myFirebaseRef.on("value", function(snapshot) {
-      var movies = snapshot.val();
+      movies = snapshot.val();
       loadMovies(movies);
 			console.log(movies);
       $("[name='viewed']").bootstrapSwitch();
@@ -35,26 +37,32 @@ requirejs(
         $("[name='viewed']").bootstrapSwitch();
         $(".bootstrap-switch-handle-on").text("Yes!");
         $(".bootstrap-switch-handle-off").text("No");
-				console.log(movies.movies);
         console.log("loadMovies function called");
       });
 
-		}
+    }
 // Get OMDB API movie info
-		
-	function getMovie(title) {
-    		$.ajax({
-    url: "http://www.omdbapi.com/?",
-    data: {
+    
+  function getMovie(title) {
+    $.ajax({
+      url: "http://www.omdbapi.com/?",
+      data: {
         t: title,
-    },
+      },
     success: function(data) {
-				console.log("Movie", data);
-			var yearRel = $("#year").val(data.Year);
-			var actors = $("#actors").val(data.Actors);
-				}
-			});
-		}
+      console.log("Movie", data);
+      var yearRel = $("#year").val(data.Year);
+      var actors = $("#actors").val(data.Actors);
+      }
+    });
+  }
+  
+  $(document).on("click", '.delete', function() {
+    var deleteTitle = $(this).siblings('h2').text();
+    var movieObject = _.where(movies.movies, {Title: deleteTitle});
+    var movieHash = _.invert(movies.movies)[movieObject];
+    deleteButton.delete(movieHash);
+  });  
 		
 	$(".addMovies").click(function(){
 		
