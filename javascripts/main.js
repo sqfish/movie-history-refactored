@@ -18,9 +18,9 @@ requirejs.config({
 });
 
 requirejs(
-["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton", "posters"],
-	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton, posters) {
-		
+["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton"],
+	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton) {
+		var poster;
 		var myFirebaseRef = new Firebase("https://movie-history-cpr.firebaseio.com/");
 		var movies;
     var moviesArray = [];
@@ -53,9 +53,9 @@ requirejs(
       console.log("Movie", data);
       var yearRel = $("#year").val(data.Year);
       var actors = $("#actors").val(data.Actors);
+      poster = data.Poster;
+      $("#poster").html("<img src='" + data.Poster + "' height=100>");
       
-      $("#poster").html("<img src='" + data.Poster + "'>");
-      //$("#poster").attr('src', data.Poster);
       }
     });
   }
@@ -79,6 +79,7 @@ requirejs(
 					"Year": $("#year").val(),
 					"Actors": $("#actors").val(),
 					"Rating": $("input.ratingRange").val(),
+          "Poster": $("#poster").html()
 					};
 			console.log("Added Rating: ", newMovie);
 		
@@ -99,7 +100,6 @@ requirejs(
 			var title = $("#movieTitle").val();
 			console.log("title", title);
 			getMovie(title);
-      posters.getPoster(title);
     });
 });
 
