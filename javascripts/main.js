@@ -26,6 +26,7 @@ requirejs(
       var movies = snapshot.val();
       loadMovies(movies);
 			console.log(movies);
+      $("[name='viewed']").bootstrapSwitch();
     });
 
     function loadMovies(movies) {
