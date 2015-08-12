@@ -33,7 +33,7 @@ requirejs(
 
     function loadMovies(movies) {
       require(['hbs!../templates/movie-list'], function(template) {
-        $("#movie-list").append(template(movies));
+        $("#movie-list").html(template(movies));
         $("[name='viewed']").bootstrapSwitch();
         $(".bootstrap-switch-handle-on").text("Yes!");
         $(".bootstrap-switch-handle-off").text("No");
@@ -59,8 +59,12 @@ requirejs(
   
   $(document).on("click", '.delete', function() {
     var deleteTitle = $(this).siblings('h2').text();
-    var movieObject = _.where(movies.movies, {Title: deleteTitle});
-    var movieHash = _.invert(movies.movies)[movieObject];
+    var movieHash = _.findKey(movies.movies, {'Title': deleteTitle});
+    console.log('movies.movies', movies.movies);
+    
+    console.log('movieHash', movieHash);
+
+
     deleteButton.delete(movieHash);
   });  
 		
