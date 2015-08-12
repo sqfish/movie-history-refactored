@@ -18,8 +18,8 @@ requirejs.config({
 });
 
 requirejs(
-["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton"],
-	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton) {
+["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton", "posters"],
+	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton, posters) {
 		
 		var myFirebaseRef = new Firebase("https://movie-history-cpr.firebaseio.com/");
 		var movies;
@@ -53,6 +53,9 @@ requirejs(
       console.log("Movie", data);
       var yearRel = $("#year").val(data.Year);
       var actors = $("#actors").val(data.Actors);
+      
+      $("#poster").html("<img src='" + data.Poster + "'>");
+      //$("#poster").attr('src', data.Poster);
       }
     });
   }
@@ -95,6 +98,23 @@ requirejs(
 		$(".subTitle").on("click", function(){
 			var title = $("#movieTitle").val();
 			console.log("title", title);
-			console.log(getMovie(title));
+			getMovie(title);
+      posters.getPoster(title);
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
