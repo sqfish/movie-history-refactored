@@ -21,7 +21,7 @@ requirejs(
 ["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton"],
 	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton) {
 		var poster;
-		var myFirebaseRef = new Firebase("https://movie-history-cpr.firebaseio.com/");
+		var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
 		var movies;
     var moviesArray = [];
 		myFirebaseRef.on("value", function(snapshot) {
@@ -87,7 +87,7 @@ requirejs(
 			// send to FireBase
 					
 			$.ajax({
-        url: "https://movie-history-cpr.firebaseio.com/movies.json",
+        url: "https://refactored-movie.firebaseio.com/movies.json",
 			method: "POST",
 			data: JSON.stringify(newMovie)
       }).done(function(addedMovie) {

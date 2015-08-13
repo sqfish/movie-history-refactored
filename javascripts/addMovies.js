@@ -4,7 +4,7 @@ define(function() {
 
     addMovie: function(newMovie)  {
       $.ajax({
-        url:"https://movie-history-cpr.firebaseio.com/",
+        url:"https://refactored-movie.firebaseio.com/",
         method: "POST",
         data: newSong
       }).done(function(addedMovie){
