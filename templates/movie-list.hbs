@@ -1,11 +1,15 @@
   {{#each movies}}
   <div class='movieItem'>
-    {{Poster}}
-    <h2>{{Title}}</h2> <h3>({{Year}})</h3> 
-    <p>{{Actors}}</p>
-    <p>{{Rating}}</p> 
-    <label for="viewed">Have I seen it?</label>
-    <input type="checkbox" name="viewed" checked>
-    <input type='button' value='delete' class='delete'>
+    <div class="posterImage">
+      {{{Poster}}}
+    </div>
+    <div class="movieInfo">
+      <h2>{{Title}}</h2> <h3>({{Year}})</h3> 
+      <p>{{Actors}}</p>
+      <p>{{Rating}}</p> 
+      <label for="viewed">Have I seen it?</label>
+      <input type="checkbox" name="viewed" checked>
+      <input type='button' value='delete' class='delete'>
+    </div>
   </div>
   {{/each}}
