@@ -8,5 +8,5 @@ define(["main", "jquery"],function(main, $) {
   $('.search').on('click', function(){
     var search = $('#input').val();
     console.log(search);
-  })
-})
+  });
+});
