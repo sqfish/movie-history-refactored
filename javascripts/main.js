@@ -18,8 +18,8 @@ requirejs.config({
 });
 
 requirejs(
-["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton"],
-	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton) {
+["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton", "nav-input"],
+	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton, navInput) {
 		var poster;
 		var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
 		var movies;
