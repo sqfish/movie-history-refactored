@@ -60,9 +60,6 @@ requirejs(
       console.log("Movie", data);
       var yearRel = $("#year").val(data.Year);
       var actors = $("#actors").val(data.Actors);
-      poster = data.Poster;
-      $("#poster").html("<img src='" + data.Poster + "' height=100>");
-      
       }
     });
   }
