@@ -41,6 +41,13 @@ requirejs(
       });
 
     }
+
+    function modalMovies(movies) {
+      require(['hbs!../templates/modal'], function(template) {
+        $(".modal-body").html(template(movies));
+        console.log("modalMovies function called");
+      });
+    }
 // Get OMDB API movie info
     
   function getMovie(title) {
@@ -102,6 +109,15 @@ requirejs(
 			console.log("title", title);
 			getMovie(title);
     });
+
+    $('.findButton').click(function () {
+      modalMovies(movies);
+      $('#modal-content').modal({
+        show: true
+      });
+    });
+    // Populating modal search
+    
 });
 
 

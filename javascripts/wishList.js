@@ -102,6 +102,12 @@ requirejs(
       console.log("title", title);
       getMovie(title);
     });
+
+    $('.findButton').click(function () {
+      $('#modal-content').modal({
+        show: true
+      });
+    });
 });
 
 
