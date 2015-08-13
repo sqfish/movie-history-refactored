@@ -18,10 +18,12 @@ requirejs.config({
 });
 
 requirejs(
-["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton", "nav-input"],
-	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton, navInput) {
+["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "bootstrap-switch", "deleteButton"],
+	function ($, _, _firebase, Handlebars, bootstrap, addMovies, bootstrapSwitch, deleteButton) {
 		var poster;
 		var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
+    var title = $('#input').val();
+    console.log(title);
 		var movies;
     var moviesArray = [];
 		myFirebaseRef.on("value", function(snapshot) {
@@ -41,6 +43,31 @@ requirejs(
       });
 
     }
+      function getMovie(title) {
+        var mUrl = "http://www.omdbapi.com/?t=" + title;
+        console.log(mUrl);
+        $.ajax({
+          url: mUrl,
+        success: function(data) {
+        console.log("Movie", data);
+        var movieTitle = data.Title;
+        var yearRel = $("#year").val(data.Year);
+        var actors = $("#actors").val(data.Actors);
+        }
+      });
+    }
+
+
+
+
+    //hitting find breaks page!
+    $('.find').click(function (title) {
+      getMovie(title);
+      modalMovies(movies);
+      $('#modal-content').modal({
+        show: true
+      });
+    });
 
     function modalMovies(movies) {
       require(['hbs!../templates/modal'], function(template) {
@@ -48,24 +75,10 @@ requirejs(
         console.log("modalMovies function called");
       });
     }
+
 // Get OMDB API movie info
     
-  function getMovie(title) {
-    $.ajax({
-      url: "http://www.omdbapi.com/?",
-      data: {
-        t: title,
-      },
-    success: function(data) {
-      console.log("Movie", data);
-      var yearRel = $("#year").val(data.Year);
-      var actors = $("#actors").val(data.Actors);
-      poster = data.Poster;
-      $("#poster").html("<img src='" + data.Poster + "' height=100>");
-      
-      }
-    });
-  }
+  
   
   $(document).on("click", '.delete', function() {
     var deleteTitle = $(this).siblings('h2').text();
@@ -110,12 +123,7 @@ requirejs(
 			getMovie(title);
     });
 
-    $('.find').click(function () {
-      modalMovies(movies);
-      $('#modal-content').modal({
-        show: true
-      });
-    });
+    
     // Populating modal search
     
 });
