@@ -79,7 +79,8 @@ requirejs(
 					"Year": $("#year").val(),
 					"Actors": $("#actors").val(),
 					"Rating": $("input.ratingRange").val(),
-          "Poster": $("#poster").html()
+          "Poster": $("#poster").html(),
+          "Viewed": $("input[type=radio]:checked").val(),
 					};
 			console.log("Added Rating: ", newMovie);
 		
