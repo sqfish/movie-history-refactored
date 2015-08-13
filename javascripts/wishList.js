@@ -32,7 +32,7 @@ requirejs(
     });
 
     function loadMovies(movies) {
-      require(['hbs!../templates/movie-list'], function(template) {
+      require(['hbs!../templates/movie-item-wishlist'], function(template) {
         $("#movie-list").html(template(movies));
         $("[name='viewed']").bootstrapSwitch();
         $(".bootstrap-switch-handle-on").text("Yes!");
