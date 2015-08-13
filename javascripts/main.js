@@ -110,7 +110,7 @@ requirejs(
 			getMovie(title);
     });
 
-    $('.findButton').click(function () {
+    $('.find').click(function () {
       modalMovies(movies);
       $('#modal-content').modal({
         show: true
