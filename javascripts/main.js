@@ -27,9 +27,10 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
     function displayMovies(movies) {
       require(['hbs!../templates/movie-item-watched'], function(template) {
         $("#movie-list").html(template(movies));
-        var watchedRating = $('input[type="hidden"]').rating();
-        console.log(watchedRating);
+        $('input[type="hidden"]').rating();
         $('input[type="hidden"]').on('change', function() {
+          var watchedRating = $(this).rating().val();
+          console.log(watchedRating);
           $.ajax({
            url: "https://refactored-movie.firebaseio.com/",
            method: "POST",
@@ -59,34 +60,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
     function modalMovies(movies) {
       require(['hbs!../templates/modal'], function(template) {
         $(".modal-body").html(template(movies));
-      });
-    }
-
-// THIS WORKS
-    function findMovieSearch(title) {
-      var mUrl = "http://www.omdbapi.com/?s=" + title + "&type=movie";
-      var searchResults;
-      $.ajax({
-        url: mUrl
-      }).done(function(data) {
-        searchResults = data.Search;
-        console.log(searchResults);
-      });
-      return searchResults;
-    }
-    
-// THIS WORKS
-    $('.find').click(function() {
-      var titleInput = $('#input').val();
-      console.log(titleInput);
-      modalMovies(findMovieSearch(titleInput)); //This may need to be fixed
-    });
-
-// THIS DOESN'T WORK
-    function modalMovies(movies) {
-      require(['hbs!../templates/modal'], function(template) {
-        $(".modal-body").html("");
-        $("#modalbod").append(template(movies));
         $('#modal-content').modal({
         show: true
       });
