@@ -1,7 +1,9 @@
 {{#each this}}
   <div class='movieItem'>
-    <div class="modalSearch">
-      {{Title}}
+    <div class="modalSearch" id="movieName"><b>{{Title}}</b>
     </div>
+    <span>({{Year}})</span>
+    <button type="button" id="addButton">Add</button>
   </div>
+  <br>
 {{/each}}

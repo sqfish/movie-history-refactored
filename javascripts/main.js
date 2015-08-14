@@ -16,8 +16,9 @@ requirejs.config({
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "deleteButton", "rating"],
-  function ($, _, _firebase, Handlebars, bootstrap, addMovies, deleteButton, bootstrapRating) {
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "deleteButton", "rating", "getAndPost"],
+  function ($, _, _firebase, Handlebars, bootstrap, addMovies, deleteButton, bootstrapRating, getAndPost) {
+
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
     myFirebaseRef.on("value", function(snapshot) {
       displayMovies(snapshot.val());
@@ -63,6 +64,26 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
       });
       });
     }
+
+    $(document).on('click', '#addButton', function(){
+      var movieName = $(this).siblings('div').text();
+      console.log(movieName);
+      getAndPost.queryMovies(movieName, function(movies) {
+        var movieObj = movies;
+        movieObj.rating = 0;
+        movieObj.viewed = false;
+        movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
+        console.log(movieObj);
+        console.log("data", movies);
+        $.ajax({
+          url: "https://refactored-movie.firebaseio.com/movies.json",
+          method: "POST",
+          data: JSON.stringify(movieObj)
+        }).done(function(movieObj) {
+          console.log(movieObj);
+        });
+      });
+    });
   // $(document).on("click", '.delete', function() {
   //   var deleteTitle = $(this).siblings('h2').text();
   //   var movieHash = _.findKey(movies.movies, {'Title': deleteTitle});
@@ -72,6 +93,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
   // });  
     
     
-
+  
 });
 
