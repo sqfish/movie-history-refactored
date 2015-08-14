@@ -5,7 +5,7 @@ requirejs.config({
     'lodash': '/bower_components/lodash/lodash.min',
     'firebase': '../bower_components/firebase/firebase',
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
-    'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min'
+    'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
     'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min'
   },
   shim: {
