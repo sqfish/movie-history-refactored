@@ -5,7 +5,7 @@ requirejs.config({
     'lodash': '/bower_components/lodash/lodash.min',
     'firebase': '../bower_components/firebase/firebase',
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
-    'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
+    'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min'
     'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min'
   },
   shim: {
@@ -59,6 +59,34 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
     function modalMovies(movies) {
       require(['hbs!../templates/modal'], function(template) {
         $(".modal-body").html(template(movies));
+      });
+    }
+
+// THIS WORKS
+    function findMovieSearch(title) {
+      var mUrl = "http://www.omdbapi.com/?s=" + title + "&type=movie";
+      var searchResults;
+      $.ajax({
+        url: mUrl
+      }).done(function(data) {
+        searchResults = data.Search;
+        console.log(searchResults);
+      });
+      return searchResults;
+    }
+    
+// THIS WORKS
+    $('.find').click(function() {
+      var titleInput = $('#input').val();
+      console.log(titleInput);
+      modalMovies(findMovieSearch(titleInput)); //This may need to be fixed
+    });
+
+// THIS DOESN'T WORK
+    function modalMovies(movies) {
+      require(['hbs!../templates/modal'], function(template) {
+        $(".modal-body").html("");
+        $("#modalbod").append(template(movies));
         $('#modal-content').modal({
         show: true
       });
@@ -92,7 +120,56 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
   //   deleteButton.delete(movieHash);
   // });  
     
+
+// Get OMDB API movie info
     
   
+  
+  // $(document).on("click", '.delete', function() {
+  //   var deleteTitle = $(this).siblings('h2').text();
+  //   var movieHash = _.findKey(movies.movies, {'Title': deleteTitle});
+  //   console.log('movies.movies', movies.movies);
+    
+  //   console.log('movieHash', movieHash);
+
+
+  //   deleteButton.delete(movieHash);
+  // });  
+    
+  // $(".addMovies").click(function(){
+    
+  //  // Created var for movie
+  //      var newMovie = {
+  //        "Title": $("#movieTitle").val(),
+  //        "Year": $("#year").val(),
+  //        "Actors": $("#actors").val(),
+  //        "Rating": $("input.ratingRange").val(),
+ //          "Poster": $("#poster").html(),
+ //          "Viewed": $("input[type=radio]:checked").val(),
+  //        };
+  //    console.log("Added Rating: ", newMovie);
+    
+      // send to FireBase
+          
+      // $.ajax({
+   //      url: "https://refactored-movie.firebaseio.com/movies.json",
+      // method: "POST",
+      // data: JSON.stringify(newMovie)
+   //    }).done(function(addedMovie) {
+      //  console.log(addedMovie);
+      //  });
+      //  });
+  
+    // Search button
+    
+    // $(".subTitle").on("click", function(){
+    //  var title = $("#movieTitle").val();
+    //  console.log("title", title);
+    //  getMovie(title);
+  //   });
+
+    
+    // Populating modal search
+    
 });
 
