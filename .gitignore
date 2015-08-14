@@ -3,3 +3,5 @@ node_modules
 styles
 .sass-cache
 .DS_Store
+javascripts/refactored-movie.json
+.gitignore

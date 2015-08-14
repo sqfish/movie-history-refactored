@@ -15,18 +15,27 @@ requirejs.config({
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "deleteButton"],
-  function ($, _, _firebase, Handlebars, bootstrap, addMovies, deleteButton) {
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton"],
+  function ($, _, _firebase, Handlebars, bootstrap, deleteButton) {
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
     myFirebaseRef.on("value", function(snapshot) {
-      displayMovies(snapshot.val());
+      var movies = snapshot.val().movies;
+      var storedMovieData = [];
+      for (var obj in movies) {
+        storedMovieData.push(movies[obj]);
+      }
+      var watchedMovieData = _.filter(storedMovieData, { 'viewed': true });
+      var wishlistMovieData = _.filter(storedMovieData, { 'viewed': false });
+      displayMovies(watchedMovieData, wishlistMovieData);
     });
 
-    function displayMovies(movies) {
-      require(['hbs!../templates/movie-item-watched'], function(template) {
-        $("#movie-list").html(template(movies));
+    function displayMovies(moviesWatched, moviesWishlist) {
+      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+        $("#movie-list").html(template(moviesWatched));
+        $("#movie-list-wishlist").html(template2(moviesWishlist));
       });
     }
+
     var searchResults;
     function findMovieSearch(title) {
       var mUrl = "http://www.omdbapi.com/?s=" + title + "&type=movie";
@@ -38,6 +47,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
         modalMovies(searchResults);
       });
     }
+
     $('.find').click(function() {
       var titleInput = $('#input').val();
       console.log(titleInput);
