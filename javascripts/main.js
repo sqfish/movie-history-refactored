@@ -5,7 +5,8 @@ requirejs.config({
     'lodash': '/bower_components/lodash/lodash.min',
     'firebase': '../bower_components/firebase/firebase',
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
-    'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min'
+    'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
+    'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min'
   },
   shim: {
     'bootstrap': ['jquery'],
@@ -15,8 +16,8 @@ requirejs.config({
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "deleteButton"],
-  function ($, _, _firebase, Handlebars, bootstrap, addMovies, deleteButton) {
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "deleteButton", "rating"],
+  function ($, _, _firebase, Handlebars, bootstrap, addMovies, deleteButton, bootstrapRating) {
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
     myFirebaseRef.on("value", function(snapshot) {
       displayMovies(snapshot.val());
@@ -25,6 +26,17 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
     function displayMovies(movies) {
       require(['hbs!../templates/movie-item-watched'], function(template) {
         $("#movie-list").html(template(movies));
+        var watchedRating = $('input[type="hidden"]').rating();
+        console.log(watchedRating);
+        $('input[type="hidden"]').on('change', function() {
+          $.ajax({
+           url: "https://refactored-movie.firebaseio.com/",
+           method: "POST",
+           data: JSON.stringify()
+         }).done(function() {
+           console.log();
+         });
+        });
       });
     }
     var searchResults;
