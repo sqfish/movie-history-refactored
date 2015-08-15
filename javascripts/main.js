@@ -26,12 +26,10 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
     var movieObject;
     myFirebaseRef.child("movies").on("value", function(snapshot) {
       var movies = snapshot.val();
-      for (var key in movies) {            //TEST TO SEE IF THIS WORKS OR IF IT IS THE OBJ
+      for (var key in movies) {
         storedMovieData.push(movies[key]);
       }
-      // for (var key in movies) {
-        // storedMovieData[storedMovieData.length] = movies[key];
-      // }
+      /////////// FILTERING MOVIES INTO WATCHED AND WISHLIST. SAVED FOR LATER /////////// 
       // var watchedMovieData = _.filter(storedMovieData, { 'viewed': true });
       // var wishlistMovieData = _.filter(storedMovieData, { 'viewed': false });
       // displayMovies(watchedMovieData, wishlistMovieData);
