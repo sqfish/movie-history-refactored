@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>Movie History</title>
   <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/bower_components/tabulous/demo/src/tabulous.css">
   <link rel="stylesheet" href="/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css">
   <link rel="stylesheet" type="text/css" href="styles/main.css"> 
 </head>
@@ -34,18 +35,24 @@
       </div>
     </div>
   </nav>
-  <div id="modal-content" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3>Results</h3>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-  </div>
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1" title="">Tab 1</a></li>
+      <li><a href="#tabs-2" title="">Tab 2</a></li>
+      <li><a href="#tabs-3" title="">Tab 3</a></li>
+    </ul>
+    <div id="tabs_container">
+      <div id="tabs-1">
+        <p>placeholder for all movies</p>
+      </div>
+      <div id="tabs-2">
+        <p>placeholder for wishlist movies</p>
+      </div>
+      <div id="tabs-3">
+        <p>placeholder for search movies</p>
+      </div>
+    </div><!--End tabs container--> 
+  </div><!--End tabs-->
   <div class="container">
     <div class="row">
       <div class="movie-list row" id="movie-list">
