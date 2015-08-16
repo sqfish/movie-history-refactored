@@ -107,10 +107,14 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       $(document).on('click', '#addToWatched', function(){
         var datakey = $(this).parent().parent().attr('data-key');
         console.log(datakey);
-        // $(this).parent
         myFirebaseRef.child("movies").child(datakey).update({"viewed": true});
         document.location.replace('index.html');
-      }); //CLOSE//: EVENT LISTENER
+      });   //CLOSE//: EVENT LISTENER
+
+      $(document).on('click', '#deleteFromWishlist', function(){
+        var datakey = $(this).parent().parent().attr('data-key');
+        myFirebaseRef.child("movies").child(datakey).set({});
+      });   //CLOSE//: EVENT LISTENER
 
     });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENERS
 
