@@ -1,5 +1,6 @@
 {{#each this}}
-  <div data-key='{{@key}}' class='movieItem col-md-3 col-xs-12 {{Title}}'>
+  {{#if viewed}}
+  <div data-key='{{@key}}' class='movieItem col-md-3 col-xs-12' id="{{Title}}">
     <div class="media-body posterImage">
       <img src="{{poster}}"> 
     </div>
@@ -7,4 +8,5 @@
       <input type="hidden" class="rating"/>
     </div>
   </div>
+  {{/if}}
 {{/each}}
