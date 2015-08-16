@@ -41,7 +41,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
     function displayMovies(data) {
       require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
         $("#movie-list").html(template(data));
-        $("#movie-list").html(template2(data));
+        $("#movie-list-wishlist").html(template2(data));
         $('input[type="hidden"]').rating();
         $('input[type="hidden"]').on('change', function() {
           var watchedRating = $(this).rating().val();
