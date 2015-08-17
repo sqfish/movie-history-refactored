@@ -128,6 +128,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         var datakey = $(this).parent().parent().attr('data-key');
         myFirebaseRef.child("movies").child(datakey).set({});
       });   //CLOSE//: EVENT LISTENER
-      
+
     });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENER
 });   //CLOSE//: OUTER REQUIREJS
