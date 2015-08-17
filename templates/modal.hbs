@@ -1,6 +1,6 @@
 <div data-key='{{@key}}' class='movieItem col-md-3 col-xs-12' id="{{Title}}">
   <div class="media-body posterImage">
-    <img src="{{poster}}"> 
+    <img class="omdbPoster" src="{{poster}}" onError="this.onerror=null;this.src='';"> 
   </div>
   <div class="media-bottom">
     <button type="button" id="addToWishList">Add to Wish List</button>
