@@ -112,6 +112,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
           var movieObj = movies;
           movieObj.rating = 0;
           movieObj.viewed = false;
+          movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
           $.ajax({
             url: "https://refactored-movie.firebaseio.com/movies.json",
             method: "POST",
@@ -143,7 +144,5 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
   //   console.log('movieHash', movieHash);
   //   deleteButton.delete(movieHash);
   // });  
-    
-    
 });   //CLOSE//: OUTER REQUIREJS
 
