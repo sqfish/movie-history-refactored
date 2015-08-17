@@ -6,7 +6,7 @@ requirejs.config({
     'firebase': '../bower_components/firebase/firebase',
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
     'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
-    'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min'
+    'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min',
   },
   shim: {
     'bootstrap': ['jquery'],
@@ -38,23 +38,36 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       displayMovies(movies);
     });     //CLOSE//: FIREBASE SNAPSHOT
 
-    function displayMovies(data) {
-      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
-        $("#movie-list").html(template(data));
-        $("#movie-list-wishlist").html(template2(data));
+      function displayMovies(data) {
+        require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+          $("#movie-list").html(template(data));
+          $("#movie-list-wishlist").html(template2(data));
+          console.log("data: ", data);
+          if (document.location.pathname === "/index.html") {
+            displayRating(data);
+          }
+        });
+      }    //CLOSE//: displayMovies()
+
+      function displayRating(data) {
+        var ratingArray = [];
+        for (var obj in data) {
+          if (data[obj].viewed) {
+            ratingArray.push(data[obj].rating);
+          }
+        }
+        var $starInput = $(".media-bottom > input");
+        for (var i in ratingArray) {
+          $starInput[i].value = ratingArray[i];
+        }
         $('input[type="hidden"]').rating();
         $('input[type="hidden"]').on('change', function() {
-          var watchedRating = $(this).rating().val();
-          $.ajax({
-           url: "https://refactored-movie.firebaseio.com/",
-           method: "POST",
-           data: JSON.stringify()
-         }).done(function() {
-           console.log();
-         });
+          var dataKey = $(this).parent().parent().attr('data-key');
+          var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
+          var watchedRating = parseInt($(this).rating().val());
+          fb.update({"rating": watchedRating});      
         });   //CLOSE//: EVENT-LISTENER
-      });
-    }   //CLOSE//: displayMovies()
+      }    //CLOSE//: displayRating()
 
     var searchResults;
     function findMovieSearch(title) {
@@ -82,6 +95,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
 
     $( document ).ready(function() {
 
+      
       $('.search').click(function() {
         var titleInput = $('#input').val();
         findMovieSearch(titleInput); 
