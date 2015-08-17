@@ -67,7 +67,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
           var watchedRating = parseInt($(this).rating().val());
           fb.update({"rating": watchedRating});      
         });   //CLOSE//: EVENT-LISTENER
-      }    //CLOSE//: displayRating()
+      }   //CLOSE//: displayRating()
 
     var searchResults;
     function findMovieSearch(title) {
