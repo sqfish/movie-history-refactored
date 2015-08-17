@@ -2,8 +2,27 @@ body {
   color: black;
 }
 
+.movieItem {
+  height: 350px;
+  width: 230px;
+  overflow-x: hidden;
+  position: right;
+}
+
+.recent {
+  border: 5px solid yellow;
+}
+
 .row {
   width: 100%;
+}
+
+#deleteFromWishlist {
+  z-index: 1000;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
 }
 
 .col-md-3 {

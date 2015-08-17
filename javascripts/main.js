@@ -53,6 +53,9 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         var $starInput = $(".media-bottom > input");
         for (var i in ratingArray) {
           $starInput[i].value = ratingArray[i];
+          if ($starInput[i].value === 0) {
+            $('input[type="hidden"]').addClass("recent");
+          }
         }
         $('input[type="hidden"]').rating();
         $('input[type="hidden"]').on('change', function() {

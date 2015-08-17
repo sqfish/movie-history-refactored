@@ -59,7 +59,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
           var dataKey = $(this).parent().parent().attr('data-key');
           var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
           var watchedRating = parseInt($(this).rating().val());
-          fb.update({"rating": watchedRating});      
+          fb.update({"rating": watchedRating}); 
         });   //CLOSE//: EVENT-LISTENER
       }   //CLOSE//: displayRating()
 
