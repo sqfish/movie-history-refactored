@@ -77,10 +77,10 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       }).done(function(data) {
         searchResults = data.Search;
         console.log(searchResults);
-        var searchResults2 = _.pluck(searchResults, 'Title');
+        var searchResults2 = _.pluck(searchResults, 'imdbID');
         console.log(searchResults2);
         _(searchResults2).forEach(function(n) {
-          var mUrl2 = "http://www.omdbapi.com/?t=" + n;
+          var mUrl2 = "http://www.omdbapi.com/?i=" + n;
           $.ajax({
             url: mUrl2
           }).done(function(data) {
