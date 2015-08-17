@@ -129,6 +129,5 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         myFirebaseRef.child("movies").child(datakey).set({});
       });   //CLOSE//: EVENT LISTENER
 
-    });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENERS
+    });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENER
 });   //CLOSE//: OUTER REQUIREJS
-

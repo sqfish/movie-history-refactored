@@ -1,4 +1,4 @@
-define(["jquery"],function($, title) {
+define(["jquery"],function($) {
   return {
     queryMovies: function(title, callback) {
       var mUrl = "http://www.omdbapi.com/?t=" + title;
