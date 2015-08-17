@@ -66,6 +66,10 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
     function displaySearch(data) {
       require(['hbs!../templates/modal'], function(template){
         $("#movie-list-wishlist").append(template(data));
+        $(".omdbPoster")
+          .on('load', function() { console.log("image loaded correctly"); })
+          .on('error', function() { $(this).parent().html(data.Title); })
+        ;
       });
     }
 
@@ -88,6 +92,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
             console.log(n);
             data.poster = "http://img.omdbapi.com/?i=" + data.imdbID + "&apikey=8513e0a1";
             displaySearch(data);
+            
           }); 
         }).value();
       });
