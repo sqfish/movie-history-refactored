@@ -7,22 +7,18 @@ requirejs.config({
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
     'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
     'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min',
-    'tabulous': '../bower_components/tabulous/demo/src/tabulous.min'
   },
   shim: {
     'bootstrap': ['jquery'],
     'rating': ['jquery'],
-    'tabulous': ['jquery'],
     'firebase': {
       exports: 'Firebase'
     }
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "rating", "getAndPost", "tabulous"],
-  function ($, _, _firebase, Handlebars, bootstrap, deleteButton, bootstrapRating, getAndPost, tabs) {
-
-
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "rating", "getAndPost"],
+  function ($, _, _firebase, Handlebars, bootstrap, deleteButton, bootstrapRating, getAndPost) {
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
     var storedMovieData = [];
     var movieObject;
@@ -38,30 +34,40 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       movieObject = {
         movies: storedMovieData
       };
+      console.log("movies: ", movies);
       displayMovies(movies);
     });     //CLOSE//: FIREBASE SNAPSHOT
 
-    function displayMovies(data) {
-      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
-        $("#movie-list").html(template(data));
+      function displayMovies(data) {
+        require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+          $("#movie-list").html(template(data));
+          $("#movie-list-wishlist").html(template2(data));
+          console.log("data: ", data);
+          if (document.location.pathname === "/index.html") {
+            displayRating(data);
+          }
+        });
+      }    //CLOSE//: displayMovies()
 
+      function displayRating(data) {
+        var ratingArray = [];
         for (var obj in data) {
-          var object = (data[obj]);
-          $('input[type="hidden"]').attr("value", object.rating);
-          console.log(object.rating);
+          if (data[obj].viewed) {
+            ratingArray.push(data[obj].rating);
+          }
         }
-
-        $("#movie-list-wishlist").html(template2(data));
-
+        var $starInput = $(".media-bottom > input");
+        for (var i in ratingArray) {
+          $starInput[i].value = ratingArray[i];
+        }
         $('input[type="hidden"]').rating();
         $('input[type="hidden"]').on('change', function() {
           var dataKey = $(this).parent().parent().attr('data-key');
           var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
           var watchedRating = parseInt($(this).rating().val());
-          fb.update({"rating": watchedRating});          
-        });
-      });
-    }
+          fb.update({"rating": watchedRating});      
+        });   //CLOSE//: EVENT-LISTENER
+      }   //CLOSE//: displayRating()
 
     var searchResults;
     function findMovieSearch(title) {
@@ -71,37 +77,60 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       }).done(function(data) {
         searchResults = data.Search;
         console.log(searchResults);
-        modalMovies(searchResults);
+        var searchResults2 = _.pluck(searchResults, 'Title');
+        console.log(searchResults2);
+        _(searchResults2).forEach(function(n) {
+          var mUrl2 = "http://www.omdbapi.com/?t=" + n;
+          $.ajax({
+            url: mUrl2
+          }).done(function(data) {
+            console.log(data);
+            console.log(n);
+            // modalMovies(searchResults3);
+          }); 
+        }).value();
       });
     }   //CLOSE//: findMovieSearch()
 
-    $('.find').click(function() {
-      var titleInput = $('#input').val();
-      findMovieSearch(titleInput); 
-    });   //CLOSE//: EVENT LISTENER
-    function modalMovies(movies) {
-      require(['hbs!../templates/modal'], function(template) {
-        $(".modal-body").html(template(movies));
-        $('#modal-content').modal({show: true});
-      });
-    }   //CLOSE//: modalMovies()
 
-    $(document).on('click', '#addButton', function(){
-      var movieName = $(this).siblings('div').text();
-      getAndPost.queryMovies(movieName, function(movies) {
-        var movieObj = movies;
-        movieObj.rating = 0;
-        movieObj.viewed = false;
-        movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
-        $.ajax({
-          url: "https://refactored-movie.firebaseio.com/movies.json",
-          method: "POST",
-          data: JSON.stringify(movieObj)
-        }).done(function(movieObj) {
-          console.log(movieObj);
+    $( document ).ready(function() {
+
+      
+      $('.search').click(function() {
+        var titleInput = $('#input').val();
+        findMovieSearch(titleInput); 
+      });   //CLOSE//: EVENT LISTENER
+      
+      $(document).on('click', '#addButton', function(){
+        var movieName = $(this).siblings('div').text();
+        getAndPost.queryMovies(movieName, function(movies) {
+          var movieObj = movies;
+          movieObj.rating = 0;
+          movieObj.viewed = false;
+          movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
+          $.ajax({
+            url: "https://refactored-movie.firebaseio.com/movies.json",
+            method: "POST",
+            data: JSON.stringify(movieObj)
+          }).done(function(movieObj) {
+            console.log(movieObj);
+          });
         });
-      });
-    });   //CLOSE//: EVENT LISTENER
+      });   //CLOSE//: EVENT LISTENER
+
+      $(document).on('click', '#addToWatched', function(){
+        var datakey = $(this).parent().parent().attr('data-key');
+        console.log(datakey);
+        myFirebaseRef.child("movies").child(datakey).update({"viewed": true});
+        document.location.replace('index.html');
+      });   //CLOSE//: EVENT LISTENER
+
+      $(document).on('click', '#deleteFromWishlist', function(){
+        var datakey = $(this).parent().parent().attr('data-key');
+        myFirebaseRef.child("movies").child(datakey).set({});
+      });   //CLOSE//: EVENT LISTENER
+
+    });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENERS
 
   // $(document).on("click", '.delete', function() {
   //   var deleteTitle = $(this).siblings('h2').text();
@@ -110,8 +139,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
   //   console.log('movieHash', movieHash);
   //   deleteButton.delete(movieHash);
   // });  
-  $('#tabs').tabulous({
-    effect: 'scale'
-  }); 
+    
     
 });   //CLOSE//: OUTER REQUIREJS
