@@ -69,6 +69,12 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         });   //CLOSE//: EVENT-LISTENER
       }   //CLOSE//: displayRating()
 
+    function displaySearch(data) {
+      require(['hbs!../templates/modal'], function(template){
+        $("#movie-list").append(template(data));
+      });
+    }
+
     var searchResults;
     function findMovieSearch(title) {
       var mUrl = "http://www.omdbapi.com/?s=" + title + "&type=movie";
@@ -86,28 +92,26 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
           }).done(function(data) {
             console.log(data);
             console.log(n);
-            // modalMovies(searchResults3);
+            data.poster = "http://img.omdbapi.com/?i=" + data.imdbID + "&apikey=8513e0a1";
+            displaySearch(data);
           }); 
         }).value();
       });
     }   //CLOSE//: findMovieSearch()
 
-
     $( document ).ready(function() {
-
-      
       $('.search').click(function() {
         var titleInput = $('#input').val();
         findMovieSearch(titleInput); 
       });   //CLOSE//: EVENT LISTENER
       
-      $(document).on('click', '#addButton', function(){
-        var movieName = $(this).siblings('div').text();
+      $(document).on('click', '#addToWishList', function(){
+        var movieName = $(this).parent().parent().attr("id");
+        console.log(movieName);
         getAndPost.queryMovies(movieName, function(movies) {
           var movieObj = movies;
           movieObj.rating = 0;
           movieObj.viewed = false;
-          movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
           $.ajax({
             url: "https://refactored-movie.firebaseio.com/movies.json",
             method: "POST",
@@ -142,3 +146,4 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
     
     
 });   //CLOSE//: OUTER REQUIREJS
+
