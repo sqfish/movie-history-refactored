@@ -27,10 +27,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       for (var key in movies) {
         storedMovieData.push(movies[key]);
       }
-      /////////// FILTERING MOVIES INTO WATCHED AND WISHLIST. SAVED FOR LATER /////////// 
-      // var watchedMovieData = _.filter(storedMovieData, { 'viewed': true });
-      // var wishlistMovieData = _.filter(storedMovieData, { 'viewed': false });
-      // displayMovies(watchedMovieData, wishlistMovieData);
       movieObject = {
         movies: storedMovieData
       };
