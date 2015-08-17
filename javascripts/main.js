@@ -27,10 +27,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       for (var key in movies) {
         storedMovieData.push(movies[key]);
       }
-      /////////// FILTERING MOVIES INTO WATCHED AND WISHLIST. SAVED FOR LATER /////////// 
-      // var watchedMovieData = _.filter(storedMovieData, { 'viewed': true });
-      // var wishlistMovieData = _.filter(storedMovieData, { 'viewed': false });
-      // displayMovies(watchedMovieData, wishlistMovieData);
       movieObject = {
         movies: storedMovieData
       };
@@ -112,6 +108,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
           var movieObj = movies;
           movieObj.rating = 0;
           movieObj.viewed = false;
+          movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
           $.ajax({
             url: "https://refactored-movie.firebaseio.com/movies.json",
             method: "POST",
@@ -134,16 +131,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         myFirebaseRef.child("movies").child(datakey).set({});
       });   //CLOSE//: EVENT LISTENER
 
-    });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENERS
-
-  // $(document).on("click", '.delete', function() {
-  //   var deleteTitle = $(this).siblings('h2').text();
-  //   var movieHash = _.findKey(movies.movies, {'Title': deleteTitle});
-  //   console.log('movies.movies', movies.movies);
-  //   console.log('movieHash', movieHash);
-  //   deleteButton.delete(movieHash);
-  // });  
-    
-    
+    });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENER    
 });   //CLOSE//: OUTER REQUIREJS
 

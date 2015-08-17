@@ -1,11 +1,12 @@
 {{#each this}}
-  <div data-key='{{@key}}' class='movieItem col-md-3 col-xs-12 {{Title}}'>
-    <div class="media-body posterImage">
-      <img src="{{poster}}"> 
+  {{#if viewed}}
+    <div data-key='{{@key}}' class='movieItem col-md-3 col-xs-12' id="{{Title}}">
+      <div class="media-body posterImage">
+        <img src="{{poster}}"> 
+      </div>
+      <div class="media-bottom">
+        <input type="hidden" class="rating"/>
+      </div>
     </div>
-    <div class="media-bottom">
-      <input type="hidden" class="rating">
-    </div>
-  </div>
   {{/if}}
 {{/each}}
