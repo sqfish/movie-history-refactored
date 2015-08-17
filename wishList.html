@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Movie History</title>
   <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css">
@@ -21,36 +22,22 @@
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="index.html">Watched <span class="sr-only">(current)</span></a></li>
-          <li class="active"><a href="wishList.html">Wish List</a></li>
+          <li class="active"><a href="index.html">Watched <span class="sr-only">(current)</span></a></li>
+          <li><a href="wishList.html">Wish List</a></li>
         </ul>
         <form class="navbar-form navbar-left" role="search">
           <div class="form-group">
             <input type="text" class="form-control" id="input" placeholder="Search">
           </div>
           <button type="button" class="btn btn-default search">Search</button>
-          <button type="button" class="btn btn-default find">Find</button>
         </form>
       </div>
     </div>
   </nav>
-  <div id="modal-content" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3>Results</h3>
-            </div>
-            <div class="modal-body">
-                <p></p>
-            </div>
-        </div>
-    </div>
-  </div>
   <div class="container">
     <div class="row">
       <div class="movie-list row" id="movie-list-wishlist">
-      
+        <p></p>
       </div>
     </div>
   </div>

@@ -1,9 +1,8 @@
-{{#each this}}
-  <div class='movieItem'>
-    <div class="modalSearch" id="movieName"><b>{{Title}}</b>
+  <div data-key='{{@key}}' class='movieItem col-md-3 col-xs-12' id="{{Title}}">
+    <div class="media-body posterImage">
+      <img src="{{poster}}"> 
     </div>
-    <span>({{Year}})</span>
-    <button type="button" id="addButton">Add</button>
+    <div class="media-bottom">
+      <button type="button" id="addToWishList">Add to Wish List</button>
+    </div>
   </div>
-  <br>
-{{/each}}
