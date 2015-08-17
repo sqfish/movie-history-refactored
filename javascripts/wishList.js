@@ -65,7 +65,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
 
     function displaySearch(data) {
       require(['hbs!../templates/modal'], function(template){
-        $("#movie-list").append(template(data));
+        $("#movie-list-wishlist").append(template(data));
       });
     }
 
@@ -128,7 +128,6 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         var datakey = $(this).parent().parent().attr('data-key');
         myFirebaseRef.child("movies").child(datakey).set({});
       });   //CLOSE//: EVENT LISTENER
-
+      
     });   //CLOSE//: (DOCUMENT).READY WRAPPER FOR EVENT LISTENERS
 });   //CLOSE//: OUTER REQUIREJS
-
