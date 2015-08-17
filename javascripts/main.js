@@ -37,7 +37,7 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
           $("#movie-list").html(template(data));
           $("#movie-list-wishlist").html(template2(data));
-          if (document.location.pathname === "/index.html") {
+          if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
             displayRating(data);
           }
         });
