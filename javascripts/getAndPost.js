@@ -1,10 +1,10 @@
-define(["jquery", "main"],function($, title) {
+define(["jquery"],function($) {
   return {
     queryMovies: function(title, callback) {
       var mUrl = "http://www.omdbapi.com/?t=" + title;
       $.ajax({
         url: mUrl,
-        method: "POST"
+        method: "GET"
       }).done(function(data) {
         callback.call(this, data);
       });
