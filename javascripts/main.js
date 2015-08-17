@@ -10,36 +10,44 @@ requirejs.config({
   },
   shim: {
     'bootstrap': ['jquery'],
+    'rating': ['jquery'],
     'firebase': {
       exports: 'Firebase'
     }
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "deleteButton", "rating", "getAndPost"],
-  function ($, _, _firebase, Handlebars, bootstrap, addMovies, deleteButton, bootstrapRating, getAndPost) {
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "rating", "getAndPost"],
+  function ($, _, _firebase, Handlebars, bootstrap, deleteButton, bootstrapRating, getAndPost) {
 
 
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
-    myFirebaseRef.on("value", function(snapshot) {
-      var movies = snapshot.val().movies;
-      var storedMovieData = [];
-      for (var obj in movies) {
-        storedMovieData.push(movies[obj]);
+    var storedMovieData = [];
+    var movieObject;
+    myFirebaseRef.child("movies").on("value", function(snapshot) {
+      var movies = snapshot.val();
+      for (var key in movies) {
+        storedMovieData.push(movies[key]);
       }
-      var watchedMovieData = _.filter(storedMovieData, { 'viewed': true });
-      var wishlistMovieData = _.filter(storedMovieData, { 'viewed': false });
-      displayMovies(watchedMovieData, wishlistMovieData);
-    });
+      /////////// FILTERING MOVIES INTO WATCHED AND WISHLIST. SAVED FOR LATER /////////// 
+      // var watchedMovieData = _.filter(storedMovieData, { 'viewed': true });
+      // var wishlistMovieData = _.filter(storedMovieData, { 'viewed': false });
+      // displayMovies(watchedMovieData, wishlistMovieData);
+      movieObject = {
+        movies: storedMovieData
+      };
+      displayMovies(movies);
 
-    function displayMovies(moviesWatched, moviesWishlist) {
+
+    });     //CLOSE//: FIREBASE SNAPSHOT
+
+    function displayMovies(data) {
       require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
-        $("#movie-list").html(template(moviesWatched));
-        $("#movie-list-wishlist").html(template2(moviesWishlist));
+        $("#movie-list").html(template(data));
+        $("#movie-list-wishlist").html(template2(data));
         $('input[type="hidden"]').rating();
         $('input[type="hidden"]').on('change', function() {
           var watchedRating = $(this).rating().val();
-          console.log(watchedRating);
           $.ajax({
            url: "https://refactored-movie.firebaseio.com/",
            method: "POST",
@@ -47,9 +55,9 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
          }).done(function() {
            console.log();
          });
-        });
+        });   //CLOSE//: EVENT-LISTENER
       });
-    }
+    }   //CLOSE//: displayMovies()
 
     var searchResults;
     function findMovieSearch(title) {
@@ -59,34 +67,33 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
       }).done(function(data) {
         searchResults = data.Search;
         console.log(searchResults);
-        modalMovies(searchResults);
+        var searchResults2 = _.pluck(searchResults, 'Title');
+        console.log(searchResults2);
+        _(searchResults2).forEach(function(n) {
+          var mUrl2 = "http://www.omdbapi.com/?t=" + n;
+          $.ajax({
+            url: mUrl2
+          }).done(function(data) {
+            console.log(data);
+            console.log(n);
+            // modalMovies(searchResults3);
+          }); 
+        }).value();
       });
-    }
+    }   //CLOSE//: findMovieSearch()
 
-    $('.find').click(function() {
+    $('.search').click(function() {
       var titleInput = $('#input').val();
-      console.log(titleInput);
       findMovieSearch(titleInput); 
-    });
-    function modalMovies(movies) {
-      require(['hbs!../templates/modal'], function(template) {
-        $(".modal-body").html(template(movies));
-        $('#modal-content').modal({
-        show: true
-      });
-      });
-    }
-
+    });   //CLOSE//: EVENT LISTENER
+    
     $(document).on('click', '#addButton', function(){
       var movieName = $(this).siblings('div').text();
-      console.log(movieName);
       getAndPost.queryMovies(movieName, function(movies) {
         var movieObj = movies;
         movieObj.rating = 0;
         movieObj.viewed = false;
         movieObj.poster = "http://img.omdbapi.com/?i=" + movieObj.imdbID + "&apikey=8513e0a1";
-        console.log(movieObj);
-        console.log("data", movies);
         $.ajax({
           url: "https://refactored-movie.firebaseio.com/movies.json",
           method: "POST",
@@ -95,7 +102,8 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
           console.log(movieObj);
         });
       });
-    });
+    });   //CLOSE//: EVENT LISTENER
+
   // $(document).on("click", '.delete', function() {
   //   var deleteTitle = $(this).siblings('h2').text();
   //   var movieHash = _.findKey(movies.movies, {'Title': deleteTitle});
@@ -104,56 +112,5 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "addMovies", "del
   //   deleteButton.delete(movieHash);
   // });  
     
-
-// Get OMDB API movie info
     
-  
-  
-  // $(document).on("click", '.delete', function() {
-  //   var deleteTitle = $(this).siblings('h2').text();
-  //   var movieHash = _.findKey(movies.movies, {'Title': deleteTitle});
-  //   console.log('movies.movies', movies.movies);
-    
-  //   console.log('movieHash', movieHash);
-
-
-  //   deleteButton.delete(movieHash);
-  // });  
-    
-  // $(".addMovies").click(function(){
-    
-  //  // Created var for movie
-  //      var newMovie = {
-  //        "Title": $("#movieTitle").val(),
-  //        "Year": $("#year").val(),
-  //        "Actors": $("#actors").val(),
-  //        "Rating": $("input.ratingRange").val(),
- //          "Poster": $("#poster").html(),
- //          "Viewed": $("input[type=radio]:checked").val(),
-  //        };
-  //    console.log("Added Rating: ", newMovie);
-    
-      // send to FireBase
-          
-      // $.ajax({
-   //      url: "https://refactored-movie.firebaseio.com/movies.json",
-      // method: "POST",
-      // data: JSON.stringify(newMovie)
-   //    }).done(function(addedMovie) {
-      //  console.log(addedMovie);
-      //  });
-      //  });
-  
-    // Search button
-    
-    // $(".subTitle").on("click", function(){
-    //  var title = $("#movieTitle").val();
-    //  console.log("title", title);
-    //  getMovie(title);
-  //   });
-
-    
-    // Populating modal search
-    
-});
-
+});   //CLOSE//: OUTER REQUIREJS
