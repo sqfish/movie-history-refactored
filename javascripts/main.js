@@ -33,38 +33,88 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       displayMovies(movies);
     });     //CLOSE//: FIREBASE SNAPSHOT
 
-      function displayMovies(data) {
-        require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
-          $("#movie-list").html(template(data));
-          $("#movie-list-wishlist").html(template2(data));
-          if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
-            displayRating(data);
-          }
-        });
-      }    //CLOSE//: displayMovies()
+    function displayMovies(data) {
+      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+        var $outputWatched = $(template(data)).filter(".movieItem");
+        var $outputWishlist = $(template(data)).filter(".movieItem");
+        
+        $("#movie-list").html($outputWatched);
+        $("#movie-list-wishlist").html($outputWishlist);
+        if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
+          displayRating(data);
+        }
+      });
+    }    //CLOSE//: displayMovies()
 
-      function displayRating(data) {
-        var ratingArray = [];
-        for (var obj in data) {
-          if (data[obj].viewed) {
-            ratingArray.push(data[obj].rating);
+    function displayRating(data) {
+      var ratingArray = [];
+      for (var obj in data) {
+        if (data[obj].viewed) {
+          ratingArray.push(data[obj].rating);
+        }
+      }
+      var $starInput = $(".media-bottom > input");
+      for (var i in ratingArray) {
+        $starInput[i].value = ratingArray[i];
+      }
+      $('input[type="hidden"]').rating();
+      $('input[type="hidden"]').on('change', function() {
+        var dataKey = $(this).parent().parent().attr('data-key');
+        var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
+        var watchedRating = parseInt($(this).rating().val());
+        fb.update({"rating": watchedRating});      
+      });   //CLOSE//: EVENT-LISTENER
+    }   //CLOSE//: displayRating()
+
+    var searchFirebase = function(input) {
+      var watchedArray = [];
+      var wishlistArray = [];
+      var searchResults;
+      var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
+      myFirebaseRef.child("movies").on("value", function(snapshot) {
+        var movies = snapshot.val();
+        for (var obj in movies) {
+          if (movies[obj].viewed) {
+            watchedArray[watchedArray.length] = movies[obj];
+          } else if (!movies[obj].viewed) {
+            wishlistArray[wishlistArray.length] = movies[obj];
           }
         }
-        var $starInput = $(".media-bottom > input");
-        for (var i in ratingArray) {
-          $starInput[i].value = ratingArray[i];
-          if ($starInput[i].value === 0) {
-            $('input[type="hidden"]').addClass("recent");
+        var searchResultsWatched = filterByInput(watchedArray);
+        var searchResultsWishlist = filterByInput(wishlistArray);
+        searchResults = {
+          "watched": searchResultsWatched,
+          "wishlist": searchResultsWishlist
+        };
+      });
+
+      function displaySearchFirebase(data) {
+      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+        var watched = data.watched;
+        var wishlist = data.wishlist;
+        // var $outputWatched = $(template(data)).filter(".movieItem");
+        // var $outputWishlist = $(template(data)).filter(".movieItem");
+        
+        // $("#movie-list").html($outputWatched);
+        // $("#movie-list-wishlist").html($outputWishlist);
+        if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
+          displayRating(data);
+        }
+      });
+    }    //CLOSE//: displaySearchFirebase()
+      
+      function filterByInput(array) {
+        var out = [];
+        for (var obj in array) {
+          if (array[obj].Title.toLowerCase().includes(input) ) {
+            out.push(array[obj]);
           }
         }
-        $('input[type="hidden"]').rating();
-        $('input[type="hidden"]').on('change', function() {
-          var dataKey = $(this).parent().parent().attr('data-key');
-          var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
-          var watchedRating = parseInt($(this).rating().val());
-          fb.update({"rating": watchedRating});      
-        });   //CLOSE//: EVENT-LISTENER
-      }   //CLOSE//: displayRating()
+        console.log(out);
+        return out;
+      }
+      return searchResults;
+    };
 
     function displaySearch(data) {
       require(['hbs!../templates/modal'], function(template){
@@ -79,16 +129,12 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         url: mUrl
       }).done(function(data) {
         searchResults = data.Search;
-        console.log(searchResults);
         var searchResults2 = _.pluck(searchResults, 'imdbID');
-        console.log(searchResults2);
         _(searchResults2).forEach(function(n) {
           var mUrl2 = "http://www.omdbapi.com/?i=" + n;
           $.ajax({
             url: mUrl2
           }).done(function(data) {
-            console.log(data);
-            console.log(n);
             data.poster = "http://img.omdbapi.com/?i=" + data.imdbID + "&apikey=8513e0a1";
             displaySearch(data);
           }); 
@@ -99,12 +145,14 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
     $( document ).ready(function() {
       $('.search').click(function() {
         var titleInput = $('#input').val();
-        findMovieSearch(titleInput); 
+        var firebaseResults = searchFirebase(titleInput);
+        console.log(firebaseResults);
+        // displaySearchFirebase(firebaseResults);
+        findMovieSearch(titleInput);
       });   //CLOSE//: EVENT LISTENER
       
       $(document).on('click', '#addToWishList', function(){
         var movieName = $(this).parent().parent().attr("id");
-        console.log(movieName);
         getAndPost.queryMovies(movieName, function(movies) {
           var movieObj = movies;
           movieObj.rating = 0;
@@ -115,14 +163,12 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
             method: "POST",
             data: JSON.stringify(movieObj)
           }).done(function(movieObj) {
-            console.log(movieObj);
           });
         });
       });   //CLOSE//: EVENT LISTENER
 
       $(document).on('click', '#addToWatched', function(){
         var datakey = $(this).parent().parent().attr('data-key');
-        console.log(datakey);
         myFirebaseRef.child("movies").child(datakey).update({"viewed": true});
         document.location.replace('index.html');
       });   //CLOSE//: EVENT LISTENER
