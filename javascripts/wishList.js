@@ -17,8 +17,8 @@ requirejs.config({
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "rating", "getAndPost"],
-  function ($, _, _firebase, Handlebars, bootstrap, deleteButton, bootstrapRating, getAndPost) {
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "rating", "getAndPost"],
+  function ($, _, _firebase, Handlebars, bootstrap, bootstrapRating, getAndPost) {
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
     var storedMovieData = [];
     var movieObject;
@@ -33,39 +33,86 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
       displayMovies(movies);
     });     //CLOSE//: FIREBASE SNAPSHOT
 
-      function displayMovies(data) {
-        require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
-          $("#movie-list").html(template(data));
-          $("#movie-list-wishlist").html(template2(data));
-          if (document.location.pathname === "/index.html") {
-            displayRating(data);
-          }
-        });
-      }    //CLOSE//: displayMovies()
+    function displayMovies(data) {
+      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+        $("#movie-list").html(template(data));
+        $("#movie-list-wishlist").html(template2(data));
+        if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
+          displayRating(data);
+        }
+      });
+    }    //CLOSE//: displayMovies()
 
-      function displayRating(data) {
-        var ratingArray = [];
-        for (var obj in data) {
-          if (data[obj].viewed) {
-            ratingArray.push(data[obj].rating);
+    function displayRating(data) {
+      var ratingArray = [];
+      for (var obj in data) {
+        if (data[obj].viewed) {
+          ratingArray.push(data[obj].rating);
+        }
+      }
+      var $starInput = $(".media-bottom > input");
+      for (var i in ratingArray) {
+        $starInput[i].value = ratingArray[i];
+      }
+      $('input[type="hidden"]').rating();
+      $('input[type="hidden"]').on('change', function() {
+        var dataKey = $(this).parent().parent().attr('data-key');
+        var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
+        var watchedRating = parseInt($(this).rating().val());
+        fb.update({"rating": watchedRating}); 
+      });   //CLOSE//: EVENT-LISTENER
+    }   //CLOSE//: displayRating()
+
+    var searchFirebase = function(input) {
+      var watchedArray = [];
+      var wishlistArray = [];
+      var searchResults;
+      var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
+      myFirebaseRef.child("movies").on("value", function(snapshot) {
+        var movies = snapshot.val();
+        for (var obj in movies) {
+          if (movies[obj].viewed) {
+            watchedArray[watchedArray.length] = movies[obj];
+          } else if (!movies[obj].viewed) {
+            wishlistArray[wishlistArray.length] = movies[obj];
           }
         }
-        var $starInput = $(".media-bottom > input");
-        for (var i in ratingArray) {
-          $starInput[i].value = ratingArray[i];
+        var searchResultsWatched = filterByInput(watchedArray);
+        var searchResultsWishlist = filterByInput(wishlistArray);
+        searchResults = {
+          "watched": searchResultsWatched,
+          "wishlist": searchResultsWishlist
+        };
+      });
+
+      function filterByInput(array) {
+        var out = [];
+        for (var obj in array) {
+          if (array[obj].Title.toLowerCase().includes(input.toLowerCase()) ) {
+            out.push(array[obj]);
+          }
         }
-        $('input[type="hidden"]').rating();
-        $('input[type="hidden"]').on('change', function() {
-          var dataKey = $(this).parent().parent().attr('data-key');
-          var fb = new Firebase("https://refactored-movie.firebaseio.com/movies/" + dataKey);
-          var watchedRating = parseInt($(this).rating().val());
-          fb.update({"rating": watchedRating}); 
-        });   //CLOSE//: EVENT-LISTENER
-      }   //CLOSE//: displayRating()
+        return out;
+      }
+      return searchResults;
+    };    //CLOSE//: searchFirebase = function()
+
+    function displaySearchFirebase(data) {
+      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+        var watched = data.watched;
+        var wishlist = data.wishlist;
+        console.log(watched, wishlist);
+        var $outputWatched = $(template(data.watched)).filter(".movieItem");
+        var $outputWishlist = $(template2(data.wishlist)).filter(".movieItem");
+        $("#movie-list").prepend($outputWatched).prepend($outputWishlist);
+        $("#movie-list-wishlist").prepend($outputWatched, $outputWishlist);
+        displayRating(data.watched);
+      });
+    }    //CLOSE//: displaySearchFirebase()
 
     function displaySearch(data) {
       require(['hbs!../templates/modal'], function(template){
-        $("#movie-list-wishlist").append(template(data));
+        $("#movie-list-wishlist").prepend(template(data));
         $(".omdbPoster")
           .on('load', function() { console.log("image loaded correctly"); })
           .on('error', function() { $(this).parent().html(data.Title); })
@@ -100,8 +147,12 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
 
     $( document ).ready(function() {
       $('.search').click(function() {
+        $("#movie-list").html("");
+        $("#movie-list-wishlist").html("");
         var titleInput = $('#input').val();
-        findMovieSearch(titleInput); 
+        var firebaseResults = searchFirebase(titleInput);
+        displaySearchFirebase(firebaseResults);
+        findMovieSearch(titleInput);
       });   //CLOSE//: EVENT LISTENER
       
       $(document).on('click', '#addToWishList', function(){

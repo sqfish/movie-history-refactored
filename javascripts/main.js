@@ -6,7 +6,7 @@ requirejs.config({
     'firebase': '../bower_components/firebase/firebase',
     'hbs': '../bower_components/require-handlebars-plugin/hbs',
     'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap.min',
-    'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min',
+    'rating': '../bower_components/bootstrap-rating/bootstrap-rating.min'
   },
   shim: {
     'bootstrap': ['jquery'],
@@ -17,8 +17,8 @@ requirejs.config({
   }
 });
 
-requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "rating", "getAndPost"],
-  function ($, _, _firebase, Handlebars, bootstrap, deleteButton, bootstrapRating, getAndPost) {
+requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "rating", "getAndPost"],
+  function ($, _, _firebase, Handlebars, bootstrap, bootstrapRating, getAndPost) {
     var myFirebaseRef = new Firebase("https://refactored-movie.firebaseio.com/");
     var storedMovieData = [];
     var movieObject;
@@ -34,10 +34,10 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
     });     //CLOSE//: FIREBASE SNAPSHOT
 
     function displayMovies(data) {
+      console.log(data);
       require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
         var $outputWatched = $(template(data)).filter(".movieItem");
         var $outputWishlist = $(template(data)).filter(".movieItem");
-        
         $("#movie-list").html($outputWatched);
         $("#movie-list-wishlist").html($outputWishlist);
         if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
@@ -88,37 +88,37 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
         };
       });
 
-      function displaySearchFirebase(data) {
-      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
-        var watched = data.watched;
-        var wishlist = data.wishlist;
-        // var $outputWatched = $(template(data)).filter(".movieItem");
-        // var $outputWishlist = $(template(data)).filter(".movieItem");
-        
-        // $("#movie-list").html($outputWatched);
-        // $("#movie-list-wishlist").html($outputWishlist);
-        if ((document.location.pathname === "/index.html") || (document.location.pathname === "/")) {
-          displayRating(data);
-        }
-      });
-    }    //CLOSE//: displaySearchFirebase()
-      
       function filterByInput(array) {
         var out = [];
         for (var obj in array) {
-          if (array[obj].Title.toLowerCase().includes(input) ) {
+          if (array[obj].Title.toLowerCase().includes(input.toLowerCase()) ) {
             out.push(array[obj]);
           }
         }
-        console.log(out);
         return out;
       }
       return searchResults;
-    };
+    };    //CLOSE//: searchFirebase = function()
+
+    function displaySearchFirebase(data) {
+      require(['hbs!../templates/movie-item-watched', 'hbs!../templates/movie-item-wishlist'], function(template, template2) {
+        var watched = data.watched;
+        var wishlist = data.wishlist;
+        console.log(watched, wishlist);
+        var $outputWatched = $(template(data.watched)).filter(".movieItem");
+        var $outputWishlist = $(template2(data.wishlist)).filter(".movieItem");
+        $("#movie-list").prepend($outputWatched).prepend($outputWishlist);
+        $("#movie-list-wishlist").prepend($outputWatched, $outputWishlist);
+        displayRating(data.watched);
+      });
+    }    //CLOSE//: displaySearchFirebase()
 
     function displaySearch(data) {
       require(['hbs!../templates/modal'], function(template){
-        $("#movie-list").append(template(data));
+        $("#movie-list").prepend(template(data));
+        $(".omdbPoster")
+          .on('load', function() { console.log("image loaded correctly"); })
+          .on('error', function() { $(this).parent().html(data.Title); });
       });
     }
 
@@ -144,10 +144,11 @@ requirejs(["jquery", "lodash", "firebase", "hbs", "bootstrap", "deleteButton", "
 
     $( document ).ready(function() {
       $('.search').click(function() {
+        $("#movie-list").html("");
+        $("#movie-list-wishlist").html("");
         var titleInput = $('#input').val();
         var firebaseResults = searchFirebase(titleInput);
-        console.log(firebaseResults);
-        // displaySearchFirebase(firebaseResults);
+        displaySearchFirebase(firebaseResults);
         findMovieSearch(titleInput);
       });   //CLOSE//: EVENT LISTENER
       
